@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Probe | Spider Cantilever</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#FF7300',
+                        bgdark: '#070707',
+                        carddark: '#111111',
+                        pcb: '#1a5c2d',
+                        stiffener: '#bdc3c7',
+                        copper: '#c86218',
+                        gold: '#ffd700'
+                    },
+                    fontFamily: {
+                        mono: ['Courier New', 'monospace'],
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #070707;
+            color: #f8fafc;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* High-tech grid background */
+        .bg-tech-grid {
+            background-image:
+                    linear-gradient(to right, rgba(255, 115, 0, 0.03) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255, 115, 0, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 15px rgba(255, 115, 0, 0.6);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070707;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF7300;
+        }
+
+        /* SVG Optimization: Removed expensive drop-shadow, replaced with simple transforms */
+        svg {
+            will-change: transform, opacity;
+        }
+
+        .svg-glow-bg {
+            background: radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(7,7,7,0) 70%);
+        }
+
+        .feature-card {
+            transition: all 0.3s ease;
+            border: 1px solid #222;
+        }
+        .feature-card:hover {
+            border-color: #FF7300;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(255, 115, 0, 0.2);
+        }
+
+        /* Step indicator styling */
+        .step-indicator {
+            transition: all 0.3s ease;
+            opacity: 0.3;
+        }
+        .step-indicator.active {
+            opacity: 1;
+            color: #FF7300;
+            text-shadow: 0 0 10px rgba(255, 115, 0, 0.5);
+            transform: scale(1.05) translateX(10px);
+        }
+    </style>
+</head>
+<body class="bg-tech-grid font-sans selection:bg-brand selection:text-white">
+
+<nav class="fixed top-0 w-full z-50 bg-[#070707]/90 backdrop-blur-sm border-b border-[#222] px-6 py-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <span class="text-xl font-bold tracking-widest uppercase">Smart<span class="text-brand">Probe</span></span>
+        </div>
+        <div class="hidden md:flex gap-6 text-sm font-mono text-gray-400">
+            <a href="#hero" class="hover:text-brand transition-colors">INIT</a>
+            <a href="#assembly" class="hover:text-brand transition-colors">ASSEMBLY</a>
+            <a href="#specs" class="hover:text-brand transition-colors">SPECS</a>
+        </div>
+    </div>
+</nav>
+
+<section id="hero" class="relative min-h-screen flex flex-col justify-center items-center pt-20 overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+    <div class="container mx-auto px-4 z-10 flex flex-col items-center">
+        <h1 class="text-5xl md:text-7xl font-extrabold text-center mb-6 uppercase tracking-tighter">
+            Spider Cantilever <br/> <span class="text-brand text-glow">Probe Card</span>
+        </h1>
+        <p class="text-gray-400 text-lg md:text-xl text-center max-w-2xl mb-12 font-mono">
+            High-density multi-site wafer testing architecture featuring engineered copper cantilever needles and precision automated signal routing.
+        </p>
+
+        <div id="hero-svg-container" class="w-full max-w-[600px] aspect-square relative svg-glow-bg rounded-full">
+        </div>
+
+        <div class="mt-12 animate-bounce">
+            <p class="text-xs text-brand font-mono mb-2 text-center uppercase">Scroll to Disassemble & Build</p>
+            <svg class="w-6 h-6 mx-auto text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+        </div>
+    </div>
+</section>
+
+<section id="assembly" class="relative h-[600vh] bg-[#070707]">
+    <div class="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
+
+        <div class="absolute left-8 md:left-16 top-1/2 -translate-y-1/2 z-20 hidden lg:block font-mono text-sm space-y-4 border-l border-[#333] pl-6 py-4">
+            <div class="step-indicator" id="step-0">01. Stiffener Plate</div>
+            <div class="step-indicator" id="step-1">02. Circular PCB</div>
+            <div class="step-indicator" id="step-2">03. Gold Pad Arrays</div>
+            <div class="step-indicator" id="step-3">04. Needle Holder</div>
+            <div class="step-indicator" id="step-4">05. Probe Block</div>
+            <div class="step-indicator" id="step-5">06. Cantilever Needles</div>
+            <div class="step-indicator" id="step-6">07. Core Ignition</div>
+            <div class="step-indicator" id="step-7">08. Signal Routing</div>
+            <div class="step-indicator" id="step-8">09. System Online</div>
+        </div>
+
+        <div id="scroll-svg-container" class="w-full max-w-[800px] aspect-square relative z-10 svg-glow-bg rounded-full">
+        </div>
+
+        <div class="absolute bottom-10 left-0 w-full text-center z-20 lg:hidden pointer-events-none">
+                <span id="mobile-step-text" class="bg-carddark/80 backdrop-blur border border-[#333] px-6 py-2 rounded-full font-mono text-brand text-sm shadow-[0_0_15px_rgba(255,115,0,0.3)]">
+                    Scroll to Assemble
+                </span>
+        </div>
+    </div>
+</section>
+
+<section id="specs" class="py-24 bg-[#070707] relative z-10 border-t border-[#222]">
+    <div class="max-w-7xl mx-auto px-6">
+        <h2 class="text-3xl font-bold mb-12 text-center uppercase tracking-widest"><span class="text-brand">System</span> Specifications</h2>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div class="card bg-carddark feature-card rounded-none">
+                <div class="card-body">
+                    <h3 class="card-title text-brand font-mono text-lg mb-2">01 // PCB Substrate</h3>
+                    <p class="text-sm text-gray-400">Large format FR4 circular board delivering structural integrity, multilayer routing, and low-noise power distribution to the testing core.</p>
+                </div>
+            </div>
+
+            <div class="card bg-carddark feature-card rounded-none">
+                <div class="card-body">
+                    <h3 class="card-title text-brand font-mono text-lg mb-2">02 // Stiffener Ring</h3>
+                    <p class="text-sm text-gray-400">Machined outer metallic ring engineered to prevent mechanical deflection and warping during extreme pressure wafer probing operations.</p>
+                </div>
+            </div>
+
+            <div class="card bg-carddark feature-card rounded-none">
+                <div class="card-body">
+                    <h3 class="card-title text-brand font-mono text-lg mb-2">03 // Cantilever Array</h3>
+                    <p class="text-sm text-gray-400">Precision-aligned beryllium copper (BeCu) micro-spring contacts ensuring reliable, repeatable physical connection to silicon dies.</p>
+                </div>
+            </div>
+
+            <div class="card bg-carddark feature-card rounded-none">
+                <div class="card-body">
+                    <h3 class="card-title text-brand font-mono text-lg mb-2">04 // Ceramic Holders</h3>
+                    <p class="text-sm text-gray-400">White ceramic clamping mechanisms securing delicate needle structures, guaranteeing perfect pitch and planarity across thousands of cycles.</p>
+                </div>
+            </div>
+
+            <div class="card bg-carddark feature-card rounded-none">
+                <div class="card-body">
+                    <h3 class="card-title text-brand font-mono text-lg mb-2">05 // Contact Pads</h3>
+                    <p class="text-sm text-gray-400">Dense gold-plated via arrays structured in perimeter octants, optimizing the interface for automated tester pogo-pin blocks.</p>
+                </div>
+            </div>
+
+            <div class="card bg-carddark feature-card rounded-none">
+                <div class="card-body">
+                    <h3 class="card-title text-brand font-mono text-lg mb-2">06 // Signal Routing</h3>
+                    <p class="text-sm text-gray-400">Micro-etched trace lines channeling high-frequency diagnostic signals from the perimeter directly into the inner active testing matrix.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<footer class="bg-black py-8 border-t border-[#222] text-center font-mono text-xs text-gray-600">
+    <p>SMART PROBE // SPIDER CANTILEVER // EXPERIMENTAL UI BUILD</p>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- 1. OPTIMIZED SVG GENERATION LOGIC ---
+        function generateSVG(prefix) {
+            const cx = 500;
+            const cy = 500;
+            // Determine if we want the expensive glow filter based on section
+            const useFilter = prefix === 'hero';
+
+            let svg = `
+                <svg viewBox="0 0 1000 1000" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="${prefix}-ring-grad" cx="50%" cy="50%" r="50%">
+                            <stop offset="85%" stop-color="#8892b0"/>
+                            <stop offset="95%" stop-color="#cbd5e1"/>
+                            <stop offset="100%" stop-color="#475569"/>
+                        </radialGradient>
+                        <linearGradient id="${prefix}-holder-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#ffffff"/>
+                            <stop offset="100%" stop-color="#cbd5e1"/>
+                        </linearGradient>
+                        ${useFilter ? `
+                        <filter id="${prefix}-glow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="3" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>` : ''}
+                    </defs>
+
+                    <g class="${prefix}-layer-stiffener">
+                        <circle cx="${cx}" cy="${cy}" r="480" fill="url(#${prefix}-ring-grad)" stroke="#475569" stroke-width="8"/>
+                    </g>
+
+                    <g class="${prefix}-layer-pcb">
+                        <circle cx="${cx}" cy="${cy}" r="430" fill="#1a5c2d" stroke="#FFD700" stroke-width="1.5"/>
+                        <circle cx="${cx}" cy="${cy}" r="180" fill="none" stroke="#2d7a40" stroke-width="2"/>
+                    </g>
+
+                    <g class="${prefix}-layer-traces">
+                `;
+
+            // Add Traces (Optimized: i += 3.5 instead of 2 to cut DOM nodes by ~40%)
+            for (let i = 0; i < 360; i += 3.5) {
+                if (i % 45 > 40 || i % 45 < 5) continue;
+                const rad = i * Math.PI / 180;
+                const x1 = cx + Math.cos(rad) * 380;
+                const y1 = cy + Math.sin(rad) * 380;
+                const x2 = cx + Math.cos(rad) * 190;
+                const y2 = cy + Math.sin(rad) * 190;
+                svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#4ade80" stroke-width="0.5" class="${prefix}-trace" opacity="0.5" />`;
+            }
+
+            svg += `</g><g class="${prefix}-layer-pads">`;
+
+            // Add Pads & Labels (Optimized layout density)
+            const radii = [285, 325, 365];
+            const octants = ["OCTANT1", "OCTANT2", "OCTANT3", "OCTANT4", "OCTANT5", "OCTANT6", "OCTANT7", "OCTANT8"];
+
+            for (let oct = 0; oct < 8; oct++) {
+                const baseAngle = oct * 45;
+                const labelAngle = baseAngle + 22.5;
+                const radLabel = labelAngle * Math.PI / 180;
+                const lx = cx + Math.cos(radLabel) * 405;
+                const ly = cy + Math.sin(radLabel) * 405;
+                svg += `<text x="${lx}" y="${ly}" fill="#fff" font-family="monospace" font-size="14" font-weight="bold" text-anchor="middle" transform="rotate(${labelAngle + 90}, ${lx}, ${ly})" class="${prefix}-label">${octants[oct]}</text>`;
+
+                radii.forEach(r => {
+                    for (let a = baseAngle + 6; a < baseAngle + 40; a += 4) {
+                        const rad = a * Math.PI / 180;
+                        const px = cx + Math.cos(rad) * r;
+                        const py = cy + Math.sin(rad) * r;
+                        svg += `<circle cx="${px}" cy="${py}" r="3" fill="#ffd700" class="${prefix}-pad"/>`;
+                    }
+                });
+            }
+
+            // Mounting Holes
+            [0, 90, 180, 270].forEach(a => {
+                const rad = a * Math.PI / 180;
+                const hx = cx + Math.cos(rad) * 220;
+                const hy = cy + Math.sin(rad) * 220;
+                svg += `<circle cx="${hx}" cy="${hy}" r="12" fill="#cbd5e1" class="${prefix}-pad"/>
+                            <circle cx="${hx}" cy="${hy}" r="6" fill="#070707" class="${prefix}-pad"/>`;
+            });
+
+            svg += `</g><g class="${prefix}-layer-block">
+                            <rect x="${cx - 130}" y="${cy - 90}" width="260" height="180" fill="#0a120d" stroke="#333" rx="8"/>
+                        </g>
+                        <g class="${prefix}-layer-needles">`;
+
+            // Add Cantilever Needles & Glows (Optimized step size)
+            let glowsStr = `<g class="${prefix}-layer-glows">`;
+            const filterAttr = useFilter ? `filter="url(#${prefix}-glow)"` : '';
+
+            const generateNeedles = (isTop) => {
+                const startY = isTop ? cy - 30 : cy + 30;
+                const dir = isTop ? -1 : 1;
+
+                for(let i = -80; i <= 80; i += 5) {
+                    const startX = cx + i;
+                    const endX = cx + (i * 2.5);
+                    const endY = startY + (dir * 130);
+
+                    const cp1X = startX;
+                    const cp1Y = startY + (dir * 40);
+                    const cp2X = endX;
+                    const cp2Y = startY + (dir * 60);
+
+                    const d = `M ${startX} ${startY} C ${cp1X} ${cp1Y}, ${cp2X} ${cp2Y}, ${endX} ${endY}`;
+                    svg += `<path d="${d}" fill="none" stroke="#c86218" stroke-width="1.8" class="${prefix}-needle"/>`;
+
+                    glowsStr += `<circle cx="${endX}" cy="${endY}" r="${useFilter ? '3' : '4'}" fill="#FF7300" ${filterAttr} class="${prefix}-glow"/>`;
+                }
+            };
+            generateNeedles(true);
+            generateNeedles(false);
+            glowsStr += `</g>`;
+
+            svg += `</g><g class="${prefix}-layer-holder">
+                            <rect x="${cx - 90}" y="${cy - 40}" width="180" height="30" fill="url(#${prefix}-holder-grad)" rx="4"/>
+                            <rect x="${cx - 90}" y="${cy + 10}" width="180" height="30" fill="url(#${prefix}-holder-grad)" rx="4"/>
+                            <rect x="${cx - 80}" y="${cy - 10}" width="160" height="20" fill="#000"/>
+                        </g>`;
+
+            svg += glowsStr;
+            svg += `</svg>`;
+            return svg;
+        }
+
+        // --- 2. INJECT SVGs & SETUP TRACES ---
+        document.getElementById('hero-svg-container').innerHTML = generateSVG('hero');
+        document.getElementById('scroll-svg-container').innerHTML = generateSVG('scroll');
+
+        function setupPaths(prefix) {
+            const needles = document.querySelectorAll(`.${prefix}-needle`);
+            needles.forEach(n => { n.setAttribute('stroke-dasharray', '300'); n.setAttribute('stroke-dashoffset', '300'); });
+
+            const traces = document.querySelectorAll(`.${prefix}-trace`);
+            traces.forEach(t => {
+                const len = Math.hypot(t.getAttribute('x2')-t.getAttribute('x1'), t.getAttribute('y2')-t.getAttribute('y1'));
+                t.setAttribute('stroke-dasharray', len);
+                t.setAttribute('stroke-dashoffset', len);
+            });
+        }
+        setupPaths('hero');
+        setupPaths('scroll');
+
+
+        // --- 3. HERO ANIMATION (Plays ONCE, completely smooth) ---
+        const heroTl = anime.timeline({ loop: false });
+
+        anime.set('.hero-layer-stiffener', { scale: 0.9, opacity: 0 });
+        anime.set('.hero-layer-pcb', { scale: 0.5, opacity: 0 });
+        anime.set(['.hero-pad', '.hero-label'], { scale: 0, opacity: 0 });
+        anime.set('.hero-layer-block', { scale: 0.8, opacity: 0 });
+        anime.set('.hero-layer-holder rect', { translateY: -20, opacity: 0 });
+        anime.set('.hero-glow', { scale: 0, opacity: 0 });
+
+        heroTl
+            .add({ targets: '.hero-layer-stiffener', scale: [0.9, 1], opacity: [0, 1], duration: 800, easing: 'easeOutExpo' })
+            .add({ targets: '.hero-layer-pcb', scale: [0.5, 1], opacity: [0, 1], duration: 800, easing: 'easeOutBack' }, '-=400')
+            .add({ targets: ['.hero-pad', '.hero-label'], scale: [0, 1], opacity: [0, 1], duration: 400, delay: anime.stagger(3, {from: 'last'}), easing: 'easeOutBack' }, '-=200')
+            .add({ targets: '.hero-layer-block', scale: [0.8, 1], opacity: [0, 1], duration: 600, easing: 'easeOutExpo' }, '-=400')
+            .add({ targets: '.hero-layer-holder rect', translateY: [-20, 0], opacity: [0, 1], duration: 500, delay: anime.stagger(100), easing: 'easeOutBack' }, '-=200')
+            .add({ targets: '.hero-needle', strokeDashoffset: [300, 0], duration: 1200, delay: anime.stagger(15, {from: 'center'}), easing: 'easeOutQuart' })
+            .add({ targets: '.hero-glow', scale: [0, 1], opacity: [0, 0.8], duration: 600, delay: anime.stagger(15, {from: 'center'}), easing: 'easeOutBack' }, '-=800')
+            .add({ targets: '.hero-trace', strokeDashoffset: [(el) => el.getAttribute('stroke-dasharray'), 0], duration: 1500, delay: anime.stagger(8, {from: 'first'}), easing: 'easeInOutSine' }, '-=600');
+
+        // Subtle continuous rotation for hero to keep it alive
+        anime({
+            targets: '#hero-svg-container svg',
+            rotateZ: [0, 360],
+            duration: 90000,
+            easing: 'linear',
+            loop: true
+        });
+
+
+        // --- 4. SMOOTH LERP SCROLL ANIMATION ---
+        const setScrollInitial = () => {
+            anime.set('.scroll-layer-stiffener', { translateY: 200, opacity: 0 });
+            anime.set('.scroll-layer-pcb', { translateY: 200, opacity: 0 });
+            anime.set(['.scroll-pad', '.scroll-label'], { scale: 0, opacity: 0 });
+            anime.set('.scroll-layer-holder', { translateY: 100, opacity: 0 });
+            anime.set('.scroll-layer-block', { scale: 0.5, opacity: 0 });
+            anime.set('.scroll-needle', { strokeDashoffset: 300 });
+            anime.set('.scroll-glow', { scale: 0, opacity: 0 });
+            anime.set('.scroll-trace', { strokeDashoffset: (el) => el.getAttribute('stroke-dasharray') });
+        };
+        setScrollInitial();
+
+        const scrollTl = anime.timeline({
+            autoplay: false,
+            duration: 10000,
+            easing: 'linear'
+        });
+
+        // Timeline mapping
+        scrollTl.add({ targets: '.scroll-layer-stiffener', translateY: [200, 0], opacity: [0, 1], duration: 1000 }, 0);
+        scrollTl.add({ targets: '.scroll-layer-pcb', translateY: [200, 0], opacity: [0, 1], duration: 1000 }, 1000);
+        scrollTl.add({ targets: ['.scroll-pad', '.scroll-label'], scale: [0, 1], opacity: [0, 1], duration: 1000, delay: anime.stagger(2) }, 2000);
+        scrollTl.add({ targets: '.scroll-layer-holder', translateY: [100, 0], opacity: [0, 1], duration: 1000 }, 3000);
+        scrollTl.add({ targets: '.scroll-layer-block', scale: [0.5, 1], opacity: [0, 1], duration: 1000 }, 4000);
+        scrollTl.add({ targets: '.scroll-needle', strokeDashoffset: [300, 0], duration: 2000, delay: anime.stagger(15) }, 5000);
+        scrollTl.add({ targets: '.scroll-glow', scale: [0, 1], opacity: [0, 1], duration: 1000, delay: anime.stagger(10) }, 7000);
+        scrollTl.add({ targets: '.scroll-trace', strokeDashoffset: [(el) => el.getAttribute('stroke-dasharray'), 0], duration: 2000, delay: anime.stagger(5) }, 8000);
+        scrollTl.add({ targets: '#scroll-svg-container', rotateX: [15, 0], rotateZ: [-5, 0], scale: [0.85, 1], duration: 10000 }, 0);
+
+        // Lerp (Linear Interpolation) Variables for butter-smooth scrolling
+        const scrollSection = document.getElementById('assembly');
+        const mobileStepText = document.getElementById('mobile-step-text');
+        const stepLabels = [
+            "01. Stiffener Plate", "02. Circular PCB", "03. Gold Pad Arrays",
+            "04. Needle Holder", "05. Probe Block", "06. Cantilever Needles",
+            "07. Core Ignition", "08. Signal Routing", "09. System Online"
+        ];
+
+        let targetProgress = 0;
+        let currentProgress = 0;
+
+        // 1. Listen to raw scroll to set the target
+        window.addEventListener('scroll', () => {
+            const sectionTop = scrollSection.offsetTop;
+            const sectionHeight = scrollSection.offsetHeight - window.innerHeight;
+            let scrollPos = window.scrollY - sectionTop;
+            targetProgress = Math.max(0, Math.min(1, scrollPos / sectionHeight));
+        });
+
+        // 2. Loop continuously to ease the current progress towards the target progress
+        function renderLoop() {
+            // Ease factor (lower = smoother/slower, higher = faster/snappier)
+            currentProgress += (targetProgress - currentProgress) * 0.08;
+
+            // Only update DOM if there's a meaningful visual change to save CPU
+            if (Math.abs(targetProgress - currentProgress) > 0.0001) {
+                scrollTl.seek(scrollTl.duration * currentProgress);
+
+                let activeStepIndex = Math.floor(currentProgress * 8.99);
+
+                // Desktop updates
+                document.querySelectorAll('.step-indicator').forEach((el, idx) => {
+                    if (idx === activeStepIndex && currentProgress > 0) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                });
+
+                // Mobile updates
+                if (currentProgress > 0 && currentProgress < 1) {
+                    mobileStepText.innerText = stepLabels[activeStepIndex];
+                    mobileStepText.style.opacity = 1;
+                } else if (currentProgress >= 1) {
+                    mobileStepText.innerText = "Assembly Complete";
+                } else {
+                    mobileStepText.innerText = "Scroll to Assemble";
+                }
+            }
+
+            requestAnimationFrame(renderLoop);
+        }
+
+        // Kick off the loop
+        requestAnimationFrame(renderLoop);
+    });
+</script>
+</body>
+</html>
